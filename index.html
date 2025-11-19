@@ -682,43 +682,47 @@
 
 <!-- Carousel Script -->
 <script>
-(function () {
-  const track = document.getElementById('sc-track');
-  const prev  = document.getElementById('sc-prev');
-  const next  = document.getElementById('sc-next');
-  const dots  = Array.from(document.querySelectorAll('.sc-dot'));
-  const slideCount = dots.length;
-  let index = 0, timer, isHover = false, startX = 0, deltaX = 0;
+document.addEventListener("DOMContentLoaded", function() {
+  (function () {
+    const track = document.getElementById('sc-track');
+    const prev  = document.getElementById('sc-prev');
+    const next  = document.getElementById('sc-next');
+    const dots  = Array.from(document.querySelectorAll('.sc-dot'));
+    const slideCount = dots.length;
+    let index = 0, timer, isHover = false, startX = 0, deltaX = 0;
 
-  function go(i) {
-    index = (i + slideCount) % slideCount;
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach((d, k) => d.setAttribute('aria-current', k === index ? 'true' : 'false'));
-  }
-  function nextSlide() { go(index + 1); }
-  function prevSlide() { go(index - 1); }
+    function go(i) {
+      index = (i + slideCount) % slideCount;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((d, k) => d.setAttribute('aria-current', k === index ? 'true' : 'false'));
+    }
 
-  function play() { timer = setInterval(() => { if (!isHover) nextSlide(); }, 5000); }
-  function stop() { clearInterval(timer); }
+    function nextSlide() { go(index + 1); }
+    function prevSlide() { go(index - 1); }
 
-  dots.forEach((d, k) => d.addEventListener('click', () => go(k)));
-  next.addEventListener('click', nextSlide);
-  prev.addEventListener('click', prevSlide);
+    function play() { timer = setInterval(() => { if (!isHover) nextSlide(); }, 5000); }
+    function stop() { clearInterval(timer); }
 
-  const root = document.getElementById('about');
-  root.addEventListener('mouseenter', () => { isHover = true; });
-  root.addEventListener('mouseleave', () => { isHover = false; });
+    dots.forEach((d, k) => d.addEventListener('click', () => go(k)));
+    next.addEventListener('click', nextSlide);
+    prev.addEventListener('click', prevSlide);
 
-  track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; deltaX = 0; stop(); }, {passive:true});
-  track.addEventListener('touchmove',  (e) => { deltaX = e.touches[0].clientX - startX; }, {passive:true});
-  track.addEventListener('touchend',   () => {
-    if (Math.abs(deltaX) > 50) (deltaX < 0 ? nextSlide() : prevSlide());
+    const root = document.getElementById('about');
+    root.addEventListener('mouseenter', () => { isHover = true; });
+    root.addEventListener('mouseleave', () => { isHover = false; });
+
+    track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; deltaX = 0; stop(); }, {passive:true});
+    track.addEventListener('touchmove',  (e) => { deltaX = e.touches[0].clientX - startX; }, {passive:true});
+    track.addEventListener('touchend',   () => {
+      if (Math.abs(deltaX) > 50) (deltaX < 0 ? nextSlide() : prevSlide());
+      play();
+    });
+
     play();
-  });
-
-  play();
-})();
+  })();
+});
 </script>
+
 
 
 
